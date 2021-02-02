@@ -94,10 +94,12 @@ void Update(RenderWindow& window) {
 	}
 	else if (bx > gameWidth) {
 		// right wall
+		server = false;
 		Reset();
 	}
 	else if (bx < 0) {
 		// left wall
+		server = true;
 		Reset();
 	}
 	else if (
