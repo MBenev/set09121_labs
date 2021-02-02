@@ -128,6 +128,18 @@ void Update(RenderWindow& window) {
 		ballVelocity.y *= 1.1f;
 		ball.move(-10, 0);
 	}
+	for (auto& p : paddles)
+	{
+		if (p.getPosition().y - paddleSize.y * 0.5 < 0)
+		{
+			p.setPosition(p.getPosition().x, 0 + paddleSize.y * 0.5);
+		}
+		if (p.getPosition().y + paddleSize.y * 0.5 > gameHeight)
+		{
+			p.setPosition(p.getPosition().x, gameHeight - paddleSize.y * 0.5);
+		}
+	}
+	
 }
 
 void Render(RenderWindow& window) {
