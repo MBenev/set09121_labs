@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "ship.h"
+#include "game.h"
 
 using namespace sf;
 using namespace std;
@@ -8,8 +9,6 @@ using namespace std;
 //Main.cpp
 Texture spritesheet;
 Sprite invader;
-const int gameWidth = 800;
-const int gameHeight = 600;
 
 vector<Ship*> ships;
 
@@ -20,11 +19,23 @@ void Load() {
     invader.setTexture(spritesheet);
     invader.setTextureRect(IntRect(0, 0, 32, 32));
 
-	Invader* inv = new Invader(IntRect(0, 0, 32, 32), { 100,100 });
-	ships.push_back(inv);
+	//rows
+	for (int i = 1; i <= invaders_rows; i++)
+	{
+		//columns
+		for (int j = 1; j <= invaders_columns; j++)
+		{
+			// Left, Top, Width, Height
+			Invader* inv = new Invader(IntRect(i*32, 0, 32, 32), { float(j*40),float(i*40) });
+			ships.push_back(inv);
+		}		
+	}
 }
 
 void Update(RenderWindow& window) {
+	// Reset clock, recalculate deltatime
+	static Clock clock;
+	float dt = clock.restart().asSeconds();
 	Event event;
 	while (window.pollEvent(event)) {
 		if (event.type == Event::Closed) {
@@ -32,15 +43,19 @@ void Update(RenderWindow& window) {
 			return;
 		}
 	}
-
 	// Quit Via ESC Key
 	if (Keyboard::isKeyPressed(Keyboard::Escape)) {
 		window.close();
 	}
+
+	for (auto& s : ships)
+	{
+		s->Update(dt);
+	}
 }
 
 void Render(RenderWindow& window) {
-	for (auto& s : ships)
+	for (const auto s : ships)
 	{
 		window.draw(*s);
 	}
